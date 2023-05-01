@@ -5,6 +5,7 @@ import { IoIosAdd } from "react-icons/io";
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { FaProductHunt } from "react-icons/fa";
+import { FaDoorOpen } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const style = {
@@ -13,6 +14,7 @@ const style = {
   btn: "text-2xl text-white hover:text-[#f5f6fa] transition duration-300 ease-in-out",
   ul: "flex flex-col",
   li: "flex items-center space-x-4 p-4 text-[#dcdde1] hover:text-[#2f3640] hover:bg-[#40739e] cursor-pointer transition duration-300 ease-in-out font-semibold",
+  liLeave: "flex items-center space-x-4 p-4 text-[#dcdde1] hover:text-[#2f3640] hover:bg-[#40739e] cursor-pointer transition duration-300 ease-in-out font-semibold pt-[530px]",
   icon: "text-2xl",
   title: "text-xl",
   menu: "color-[#f5f6fa] display-[none] hidden p-2"
@@ -57,18 +59,22 @@ function SideBar() {
                   <span className={style.title}>Home</span>
                 </li>
             </Link>
-            <li className={style.li}>
-              <span className={style.icon}>
-                <AiFillPieChart />
-              </span>
-              <span className={style.title}>Sales</span>
-            </li>
-            <li className={style.li}>
-                <span className={style.icon}>
-                    <FaProductHunt />
-                </span>
-                <span className={style.title}>products</span>
-            </li>
+            <Link to="/sales">
+              <li className={style.li}>
+                  <span className={style.icon}>
+                      <AiFillPieChart />
+                  </span>
+                  <span className={style.title}>Sales</span>
+              </li>
+            </Link>
+            <Link to="/products">
+              <li className={style.li}>
+                  <span className={style.icon}>
+                      <FaProductHunt />
+                  </span>
+                  <span className={style.title}>products</span>
+              </li>
+            </Link>
             <Link to="/add-product">
                 <li className={style.li}>
                     <span className={style.icon}>
@@ -77,6 +83,12 @@ function SideBar() {
                     <span className={style.title}>Add Product</span>
                 </li>
             </Link>
+            <li className={style.liLeave}>
+                <span className={style.icon}>
+                    <FaDoorOpen />
+                </span>
+                <span className={style.title}>Log Out</span>
+            </li>
           </ul>
         </div>
     </aside>

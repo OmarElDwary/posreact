@@ -1,14 +1,20 @@
 import React from "react";
-import CashierComponent from "./CashierComponent";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const style = {
-  container: "flex flex-wrap justify-between p-10",
+  container: "flex flex-row justify-between p-10",
   component: "bg-white shadow-md rounded-md p-50",
   cards: " grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-5 ",
   card: "bg-white shadow-md rounded-md p-4 cursor-pointer transition duration-300 ease-in-out hover:shadow-lg",
   cardHeader: "flex justify-between items-center",
   icon: "text-2xl",
   cardBody: "flex justify-center items-center",
+  table: "table-auto border-collapse border border-gray-400",
+  th: "border border-gray-400 px-4 py-2 . p-3",
+  td: "border border-gray-400 px-4 py-2 text-center",
+  p: "text-center font-bold text-2xl",
+  button: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center  w-full",
 };
 
 function HomeComponent(props) {
@@ -35,6 +41,30 @@ function HomeComponent(props) {
       ]);
     }
   };
+
+  // Calculate the total based on the cartItems
+  const total = cartItems.reduce((acc, cur) => acc + cur.total, 0);
+
+  const printRecipt = () => {
+    const timestamp = new Date();
+    cartItems.forEach((item) => {
+      const sale = {
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        timestamp: timestamp.toDateString(),
+        total: item.total,
+      };
+      addDoc(collection(db, "sales"), sale);
+    });
+    const recipt = document.getElementById("recipt");
+    const w = window.open();
+    w.document.write(`<style>#print{display:none}</style>`);
+    w.document.write(recipt.innerHTML);
+    w.print();
+    w.close();
+    setCartItems([]);
+  };
   
 
   return (
@@ -53,7 +83,41 @@ function HomeComponent(props) {
           </div>
         ))}
       </div>
-        <CashierComponent className={style.component} cart={cartItems} />
+      <div id="recipt">
+        <table className={style.table}>
+          <thead>
+            <tr>
+              <th className={style.th}>Product</th>
+              <th className={style.th}>Price</th>
+              <th className={style.th}>Quantity</th>
+              <th className={style.th}>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cartItems.map((item) => (
+              <tr key={item.id}>
+                <td className={style.td}>{item.name}</td>
+                <td className={style.td}>{item.price}</td>
+                <td className={style.td}>{item.quantity}</td>
+                <td className={style.td}>{item.total}</td>
+              </tr>
+            ))}
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td colSpan="3" className="text-right font-bold">
+                Total:
+              </td>
+              <td className={style.td}>{total}</td>
+            </tr>
+          </tfoot>
+        </table>
+        <p className={style.p}>Have A Nice Meal</p>
+        <button id="print" className={style.button} onClick={() => printRecipt()}>
+          Place Order
+        </button>
+      </div>
     </div>
   );
 }
