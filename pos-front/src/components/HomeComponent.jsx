@@ -1,6 +1,7 @@
 import React from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { AiFillDelete } from "react-icons/ai";
 
 const style = {
   container: "flex flex-row justify-between p-10",
@@ -42,6 +43,22 @@ function HomeComponent(props) {
     }
   };
 
+  const removeFromCart = (product) => {
+    const existingCartItem = cartItems.find((item) => item.id === product.id);
+    if (existingCartItem.quantity === 1) {
+      setCartItems((prevCartItems) =>
+        prevCartItems.filter((item) => item.id !== product.id)
+      );
+    } else {
+      setCartItems((prevCartItems) =>
+        prevCartItems.map((item) =>
+          item.id === existingCartItem.id
+            ? { ...item, quantity: item.quantity - 1, total: item.total - item.price }
+            : item
+        )
+      );
+    }
+  };
   // Calculate the total based on the cartItems
   const total = cartItems.reduce((acc, cur) => acc + cur.total, 0);
 
@@ -65,6 +82,20 @@ function HomeComponent(props) {
     w.close();
     setCartItems([]);
   };
+
+  // discount
+  const makeDiscount = () => {
+    const prompt = window.prompt("Enter Discount Percentage");
+    const discount = parseInt((total * prompt) / 100);
+    const discountedTotal = (total - discount);
+
+    const updatedCartItems = cartItems.map((item) => ({
+      ...item,
+      total: ((item.price * item.quantity) / total) * discountedTotal,
+    }));
+  
+    setCartItems(updatedCartItems);
+  };
   
 
   return (
@@ -87,15 +118,22 @@ function HomeComponent(props) {
         <table className={style.table}>
           <thead>
             <tr>
+              <th className={style.th}></th>
               <th className={style.th}>Product</th>
               <th className={style.th}>Price</th>
               <th className={style.th}>Quantity</th>
               <th className={style.th}>Total</th>
+              <th className={style.th}></th>
             </tr>
           </thead>
           <tbody>
             {cartItems.map((item) => (
               <tr key={item.id}>
+                <td className={style.td}>
+                  <button onClick={() => removeFromCart(item)} className={style.delete}>
+                    <AiFillDelete />
+                  </button>
+                </td>
                 <td className={style.td}>{item.name}</td>
                 <td className={style.td}>{item.price}</td>
                 <td className={style.td}>{item.quantity}</td>
@@ -110,6 +148,11 @@ function HomeComponent(props) {
                 Total:
               </td>
               <td className={style.td}>{total}</td>
+              <td className={style.td}>
+                  <button onClick={() => makeDiscount()} className={style.delete}>
+                    Discount
+                  </button>
+                </td>
             </tr>
           </tfoot>
         </table>

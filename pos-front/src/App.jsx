@@ -26,6 +26,10 @@ function App() {
   const [products, setProducts] = useState([]);
   const [sales, setSales] = useState([]);
 
+  /*
+  products functions
+  */
+  // create product
   const createProduct = async (e) => {
     e.preventDefault();
     const name = e.target[0].value;
@@ -125,8 +129,19 @@ function App() {
     await deleteDoc(doc(db, "sales", id));
     alert("Sale Deleted Successfully");
   };
-  // const deleteSales = async () => {
-  //   const q = query(collection(db, "sales"));
+  // delete all sales
+  const deleteSales = async () => {
+    const q = collection(db, "sales");
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const docRef = doc.ref;
+        deleteDoc(docRef);
+      });
+    });
+    return unsubscribe;
+  };  
+  
+  
 
   return (
     <div className="App" style={{ display: "flex" }}>
@@ -161,7 +176,7 @@ function App() {
               />
             }
           />
-          <Route path="/sales" element={<SalesComponent sales={sales} deleteSale={deleteSale}/>} />
+          <Route path="/sales" element={<SalesComponent sales={sales} deleteSale={deleteSale} deleteSales={deleteSales} />} />
           <Route path="/login" element={<LoginComponent />} />
         </Routes>
       </main>

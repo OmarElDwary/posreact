@@ -14,7 +14,6 @@ const style = {
   btn: "text-2xl text-white hover:text-[#f5f6fa] transition duration-300 ease-in-out",
   ul: "flex flex-col",
   li: "flex items-center space-x-4 p-4 text-[#dcdde1] hover:text-[#2f3640] hover:bg-[#40739e] cursor-pointer transition duration-300 ease-in-out font-semibold",
-  liLeave: "flex items-center space-x-4 p-4 text-[#dcdde1] hover:text-[#2f3640] hover:bg-[#40739e] cursor-pointer transition duration-300 ease-in-out font-semibold pt-[530px]",
   icon: "text-2xl",
   title: "text-xl",
   menu: "color-[#f5f6fa] display-[none] hidden p-2"
@@ -83,7 +82,7 @@ function SideBar() {
                     <span className={style.title}>Add Product</span>
                 </li>
             </Link>
-            <li className={style.liLeave}>
+            <li className={style.li}>
                 <span className={style.icon}>
                     <FaDoorOpen />
                 </span>

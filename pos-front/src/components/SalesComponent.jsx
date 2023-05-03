@@ -6,6 +6,9 @@ const style = {
   thead: "bg-gray-400",
   th: "border border-gray-400 px-4 py-2 . p-3",
   td: "border border-gray-400 px-4 py-2 text-center",
+  tr: "bg-gray-100",
+  delDiv: "flex justify-center p-5",
+  delAll: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded",
 };
 
 const SalesComponent = (props) => {
@@ -44,7 +47,9 @@ const SalesComponent = (props) => {
           ))}
         </tbody>
       </table>
-      
+      <div className={style.delDiv}>
+        <button className={style.delAll} onClick={() => props.deleteSales()}>Delete All</button>
+      </div>
     </div>
   );
 };
